@@ -13,7 +13,7 @@ embed-resource = "1.7.3"
 [dependencies]
 cesu8 = "1.1.0"
 combine = "4.6.3"
-jni = { version = "0.19.0", features = ["invocation"], git = "https://github.com/Osmerion/jni-rs" }
+jni = { version = "0.21.1", features = ["invocation"] }
 libloading = "0.7"
 log = "0.4.14"
 serde = { version = "1.0.133", features = ["derive"] }
