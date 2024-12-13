@@ -1,46 +1,90 @@
-extern crate jni;
+#![allow(non_snake_case)]
+#![windows_subsystem = "windows"]
+
+mod error;
 
 use std::fs;
 use std::path::Path;
-use jni::objects::{JObject, JValue};
-use jni::sys::JNIWrapper;
+use std::process::{ExitCode, Termination};
+use jni::{InitArgs, InitArgsBuilder, JavaVM, JNIVersion};
+use jni::objects::JValue;
 use serde::Deserialize;
-use thiserror::private::PathAsDisplay;
+use winapi::um::wincon::{ATTACH_PARENT_PROCESS, AttachConsole};
+use crate::error::Error;
+
+type Result<T> = std::result::Result<T, Error>;
+
+fn main() -> ExitCode {
+    unsafe {
+        AttachConsole(ATTACH_PARENT_PROCESS);
+    }
+
+    match run() {
+        Ok(_) => ExitCode::from(0),
+        Err(err) => {
+            eprintln!("{}", err);
+            err.report()
+        }
+    }
+}
+
+fn run() -> Result<()> {
+    let current_exe = std::env::current_exe().map_err(Error::UnknownExecutable)?;
+    let application_dir = current_exe.parent().ok_or(Error::UnknownApplicationDir)?;
+
+    let config: Config = load_config(&application_dir.join("config.toml"))?;
+    let init_args = build_init_args(&config)?;
+
+    let libjvm_path = application_dir.join(&config.libjvm_path);
+    let jvm = JavaVM::with_libjvm(init_args, || Ok(libjvm_path.as_os_str()))
+        .map_err(|err| {
+            eprintln!("Error starting JVM: {}", err);
+            Error::JvmStartError(err)
+        })?;
+
+    let mut env = jvm.attach_current_thread().map_err(Error::CouldNotAttachToJvm)?;
+
+    let main_class = env.find_class(config.main_class).map_err(Error::CouldNotFindMainClass)?;
+
+    let program_args: Vec<String> = std::env::args().collect();
+    let argv_strings: Vec<_> = program_args.iter().map(|it| env.new_string(it).unwrap()).collect();
+    let argv: Vec<JValue> = argv_strings.iter().map(|it| JValue::from(it)).collect();
+
+    env.call_static_method(main_class, "main", "([Ljava/lang/String;)V", &argv).unwrap();
+
+    match env.exception_check() {
+        Ok(exception) if exception => {
+            let _ = env.exception_describe();
+            Err(Error::ProgramError)
+        },
+        Ok(_) => Ok(()),
+        Err(err) => Err(Error::UnexpectedJniError(err))
+    }
+}
+
+fn load_config(path: &Path) -> Result<Config> {
+    let file_content = fs::read_to_string(path).map_err(Error::CouldNotLoadConfig)?;
+    let config: Config = toml::from_str(&file_content).map_err(Error::CouldNotReadConfig)?;
+    // TODO validation?
+
+    Ok(config)
+}
 
 #[derive(Deserialize)]
 struct Config {
-    jvm: String,
+    jvm_args: Vec<String>,
+    libjvm_path: String,
     main_class: String
 }
 
-fn main() {
-    let init_args = jni::InitArgsBuilder::new()
+fn build_init_args(config: &Config) -> Result<InitArgs> {
+    let mut init_args_builder = InitArgsBuilder::new()
         .ignore_unrecognized(false)
-        .option("")
-        .version(jni::JNIVersion::V10)
-        .build()
-        .unwrap();
+        .version(JNIVersion::from(0x00150000));
 
-    let app_dir = std::env::current_exe().unwrap();
-    let cfg_path = app_dir.parent().unwrap().join("config.toml");
-
-    println!("{}", cfg_path.as_display());
-
-    let cfg_text = fs::read_to_string(cfg_path).unwrap();
-    let config: Config = toml::from_str(&cfg_text).unwrap();
-
-    println!("Foo");
-
-    unsafe {
-        let jni = JNIWrapper::new("C:/Program Files/Java/openjdk-17/bin/server/jvm.dll").unwrap();
-        let jvm = jni::JavaVM::new(jni, init_args).unwrap();
-        let env = jvm.attach_current_thread().unwrap();
-
-        let class = env.find_class(config.main_class).unwrap(); // TODO find main class
-
-        let program_args = env.new_object_array(0, env.find_class("java/lang/String").unwrap(), JObject::null()).unwrap();
-        env.call_static_method(class, "main", "([Ljava/lang/String;)V", &[JValue::Object(JObject::from(program_args))]).unwrap();
-
-        std::process::exit(if env.exception_check().unwrap() { 1 } else { 0 });
+    for jvm_arg in &config.jvm_args {
+        init_args_builder = init_args_builder.option(jvm_arg);
     }
+
+    init_args_builder.build().map_err(Error::CouldNotBuildInitArgs)
 }
