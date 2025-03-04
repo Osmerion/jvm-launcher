@@ -120,7 +120,7 @@ public open class BuildJvmLauncher @Inject constructor(
             this.workingDir = sourceDirectory.get().asFile
 
             environment(buildMap {
-                put("OSMERION_jvmLauncher_descriptor", resources.asFile.absolutePath)
+                put("OSMERION_jvmLauncher_versioninfo", resources.asFile.absolutePath)
 
                 val icon = icon.orNull
                 if (icon != null) put("OSMERION_jvmLauncher_icon", iconResource.asFile.absolutePath)
