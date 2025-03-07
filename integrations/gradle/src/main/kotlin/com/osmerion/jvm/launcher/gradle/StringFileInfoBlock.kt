@@ -75,6 +75,7 @@ public interface StringFileInfoBlock {
      * @since   0.1.0
      */
     @get:Input
+    @get:Optional
     public val internalName: Property<String>
 
     /**
