@@ -60,7 +60,7 @@ public interface StringFileInfoBlock {
     public val fileDescription: Property<String>
 
     /**
-     * TODO doc
+     * A string representing the version of the file.
      *
      * @since   0.1.0
      */
@@ -68,7 +68,9 @@ public interface StringFileInfoBlock {
     public val fileVersion: Property<String>
 
     /**
-     * TODO doc
+     * The internal name of the file, if one exists.
+     *
+     * Defaults to the original name of the file.
      *
      * @since   0.1.0
      */
@@ -76,7 +78,8 @@ public interface StringFileInfoBlock {
     public val internalName: Property<String>
 
     /**
-     * TODO doc
+     * Copyright notices that apply to the file. This should include the full text of all notices, legal symbols,
+     * copyright dates, and so on.
      *
      * @since   0.1.0
      */
@@ -85,7 +88,8 @@ public interface StringFileInfoBlock {
     public val legalCopyright: Property<String>
 
     /**
-     * TODO doc
+     * Trademarks and registered trademarks that apply to the file. This should include the full text of all notices,
+     * legal symbols, trademark numbers, and so on.
      *
      * @since   0.1.0
      */

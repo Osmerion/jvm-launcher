@@ -29,7 +29,7 @@ import java.nio.file.StandardCopyOption
 import javax.inject.Inject
 
 /**
- * TODO doc
+ * Builds a JVM launcher executable.
  *
  * @since   0.1.0
  *
@@ -41,29 +41,56 @@ public open class BuildJvmLauncher @Inject constructor(
     objectFactory: ObjectFactory
 ): DefaultTask() {
 
+    /**
+     * The executable to use for building the launcher.
+     *
+     * Defaults to `cargo`.
+     *
+     * @since   0.1.0
+     */
     @get:Input
     public val executable: Property<String> = objectFactory.property(String::class.java)
         .convention("cargo")
 
+    /**
+     * The directory containing the source code for the launcher.
+     *
+     * @since   0.1.0
+     */
     @get:InputDirectory
     @get:PathSensitive(PathSensitivity.RELATIVE)
     public val sourceDirectory: DirectoryProperty = objectFactory.directoryProperty()
 
+    /**
+     * The directory to place the launcher executable and PDB in.
+     *
+     * @since   0.1.0
+     */
     @get:Internal
     public val destinationDirectory: DirectoryProperty = objectFactory.directoryProperty()
 
     // fixed-info
 
+    /**
+     * The binary version number for the executable.
+     *
+     * @since   0.1.0
+     */
     @get:Input
     public val fileVersion: Property<VersionNumber> = objectFactory.property(VersionNumber::class.java)
 
+    /**
+     * The binary version number the product with which the file is distributed.
+     *
+     * @since   0.1.0
+     */
     @get:Input
     public val productVersion: Property<VersionNumber> = objectFactory.property(VersionNumber::class.java)
 
     // lifted props
 
     /**
-     * TODO doc
+     * The original name of the executable (without the `.exe` extension).
      *
      * @since   0.1.0
      */
@@ -72,18 +99,28 @@ public open class BuildJvmLauncher @Inject constructor(
 
     // props
 
+    /**
+     * Localized string information for the executable.
+     *
+     * @since   0.1.0
+     */
     @get:Nested
     public val stringFileInfo: Property<StringFileInfoBlock> = objectFactory.property(StringFileInfoBlock::class.java)
 
     // other
 
+    /**
+     * The icon to use for the executable.
+     *
+     * @since   0.1.0
+     */
     @get:InputFile
     @get:PathSensitive(PathSensitivity.RELATIVE)
     public val icon: RegularFileProperty = objectFactory.fileProperty()
 
     init {
-        outputs.file(destinationDirectory.flatMap { it.dir(originalFilename.map { "$it.exe" }) })
-        outputs.file(destinationDirectory.flatMap { it.dir(originalFilename.map { "$it.pdb" }) })
+        outputs.file(destinationDirectory.flatMap { destinationDir -> destinationDir.dir(originalFilename.map { "$it.exe" }) })
+        outputs.file(destinationDirectory.flatMap { destinationDir -> destinationDir.dir(originalFilename.map { "$it.pdb" }) })
     }
 
     @TaskAction
@@ -115,7 +152,7 @@ public open class BuildJvmLauncher @Inject constructor(
                         appendLine("VALUE \"CompanyName\", \"${stringFileInfo.companyName.get()}\\0\"")
                         appendLine("VALUE \"FileDescription\", \"${stringFileInfo.fileDescription.get()}\\0\"")
                         appendLine("VALUE \"FileVersion\", \"${stringFileInfo.fileVersion.get()}\\0\"")
-                        appendLine("VALUE \"InternalName\", \"${stringFileInfo.internalName.get()}\\0\"")
+                        appendLine("VALUE \"InternalName\", \"${stringFileInfo.internalName.orElse(originalFilename)}\\0\"")
                         stringFileInfo.legalCopyright.orNull?.let { appendLine("VALUE \"LegalCopyright\", \"$it\\0\"") }
                         stringFileInfo.legalTrademarks.orNull?.let { appendLine("VALUE \"LegalTrademarks\", \"$it\\0\"") }
                         appendLine("VALUE \"OriginalFilename\", \"$originalFilename.exe\\0\"")
