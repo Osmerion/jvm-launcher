@@ -76,6 +76,7 @@ public open class BuildJvmLauncher @Inject constructor(
         val resources = workingDirectory.file("launcher.rc")
 
         val versionInfoResource = buildString {
+            appendLine("#include <winresrc.h>")
             appendLine("1               VERSIONINFO")
             fileVersion.orNull?.let { appendLine("FILEVERSION     ${it.toString(separator = ",")}") }
             productVersion.orNull?.let { appendLine("PRODUCTVERSION  ${it.toString(separator = ",")}") }
