@@ -116,6 +116,7 @@ public open class BuildJvmLauncher @Inject constructor(
      */
     @get:InputFile
     @get:PathSensitive(PathSensitivity.RELATIVE)
+    @get:Optional
     public val icon: RegularFileProperty = objectFactory.fileProperty()
 
     init {
