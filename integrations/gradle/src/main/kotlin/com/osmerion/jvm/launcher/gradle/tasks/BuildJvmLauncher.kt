@@ -112,8 +112,12 @@ public open class BuildJvmLauncher @Inject constructor(
 
         resources.asFile.writeText(versionInfoResource)
 
-        val iconResource = workingDirectory.file("icon.rc")
-        iconResource.asFile.writeText("""appicon ICON "${iconResource.asFile.absolutePath}"""")
+        val iconResource = icon.orNull?.let { iconFile ->
+            val iconResource = sourceDirectory.file("icon.rc")
+            iconResource.asFile.writeText("""appicon ICON "${iconFile.asFile.absolutePath}"""")
+
+            iconResource
+        }
 
         execOperations.exec {
             this.executable = this@BuildJvmLauncher.executable.get()
@@ -121,9 +125,7 @@ public open class BuildJvmLauncher @Inject constructor(
 
             environment(buildMap {
                 put("OSMERION_jvmLauncher_versioninfo", resources.asFile.absolutePath)
-
-                val icon = icon.orNull
-                if (icon != null) put("OSMERION_jvmLauncher_icon", iconResource.asFile.absolutePath)
+                if (iconResource != null) put("OSMERION_jvmLauncher_icon", iconResource.asFile.absolutePath)
             })
 
             args("build", "--release")
