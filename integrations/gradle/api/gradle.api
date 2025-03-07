@@ -1,0 +1,71 @@
+public abstract interface class com/osmerion/jvm/launcher/gradle/JvmLauncher : org/gradle/api/Named {
+	public abstract fun fileVersion (SSSS)V
+	public abstract fun getClasspath ()Lorg/gradle/api/provider/ListProperty;
+	public abstract fun getFileVersion ()Lorg/gradle/api/provider/Property;
+	public abstract fun getIcon ()Lorg/gradle/api/file/RegularFileProperty;
+	public abstract fun getJvmArgs ()Lorg/gradle/api/provider/ListProperty;
+	public abstract fun getLibjvmPath ()Lorg/gradle/api/provider/Property;
+	public abstract fun getMainClassName ()Lorg/gradle/api/provider/Property;
+	public abstract fun getProductVersion ()Lorg/gradle/api/provider/Property;
+	public abstract fun productVersion (SSSS)V
+	public abstract fun stringFileInfo (Lorg/gradle/api/Action;)V
+}
+
+public abstract interface class com/osmerion/jvm/launcher/gradle/JvmLauncherExtension {
+	public abstract fun getLaunchers ()Lorg/gradle/api/NamedDomainObjectContainer;
+}
+
+public abstract interface class com/osmerion/jvm/launcher/gradle/StringFileInfoBlock {
+	public abstract fun getComments ()Lorg/gradle/api/provider/Property;
+	public abstract fun getCompanyName ()Lorg/gradle/api/provider/Property;
+	public abstract fun getFileDescription ()Lorg/gradle/api/provider/Property;
+	public abstract fun getFileVersion ()Lorg/gradle/api/provider/Property;
+	public abstract fun getInternalName ()Lorg/gradle/api/provider/Property;
+	public abstract fun getLegalCopyright ()Lorg/gradle/api/provider/Property;
+	public abstract fun getLegalTrademarks ()Lorg/gradle/api/provider/Property;
+	public abstract fun getProductName ()Lorg/gradle/api/provider/Property;
+	public abstract fun getProductVersion ()Lorg/gradle/api/provider/Property;
+}
+
+public final class com/osmerion/jvm/launcher/gradle/VersionNumber : java/io/Serializable {
+	public fun <init> (SSSS)V
+	public final fun component0 ()S
+	public final fun component1 ()S
+	public final fun component2 ()S
+	public final fun component3 ()S
+	public final fun getH1 ()S
+	public final fun getH2 ()S
+	public final fun getL1 ()S
+	public final fun getL2 ()S
+	public final fun toString (Ljava/lang/String;)Ljava/lang/String;
+}
+
+public class com/osmerion/jvm/launcher/gradle/plugins/JvmLauncherPlugin : org/gradle/api/Plugin {
+	protected fun <init> ()V
+	public synthetic fun apply (Ljava/lang/Object;)V
+	public fun apply (Lorg/gradle/api/Project;)V
+}
+
+public class com/osmerion/jvm/launcher/gradle/tasks/BuildJvmLauncher : org/gradle/api/DefaultTask {
+	public fun <init> (Lorg/gradle/process/ExecOperations;Lorg/gradle/api/model/ObjectFactory;)V
+	protected final fun compile ()V
+	public final fun getDestinationDirectory ()Lorg/gradle/api/file/DirectoryProperty;
+	public final fun getExecutable ()Lorg/gradle/api/provider/Property;
+	public final fun getFileVersion ()Lorg/gradle/api/provider/Property;
+	public final fun getIcon ()Lorg/gradle/api/file/RegularFileProperty;
+	public final fun getOriginalFilename ()Lorg/gradle/api/provider/Property;
+	public final fun getProductVersion ()Lorg/gradle/api/provider/Property;
+	public final fun getSourceDirectory ()Lorg/gradle/api/file/DirectoryProperty;
+	public final fun getStringFileInfo ()Lorg/gradle/api/provider/Property;
+}
+
+public abstract class com/osmerion/jvm/launcher/gradle/tasks/GenerateLauncherConfig : org/gradle/api/DefaultTask {
+	public fun <init> ()V
+	protected final fun generate ()V
+	public abstract fun getClasspath ()Lorg/gradle/api/provider/ListProperty;
+	public abstract fun getJvmArgs ()Lorg/gradle/api/provider/ListProperty;
+	public abstract fun getLibjvmPath ()Lorg/gradle/api/provider/Property;
+	public abstract fun getMainClassName ()Lorg/gradle/api/provider/Property;
+	public abstract fun getOutputFile ()Lorg/gradle/api/file/RegularFileProperty;
+}
+
