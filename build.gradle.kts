@@ -18,7 +18,7 @@ plugins {
     id("com.osmerion.maven-publish-conventions")
 }
 
-tasks.register<Jar>("jar") {
+val jar = tasks.register<Jar>("jar") {
     destinationDirectory.set(layout.buildDirectory.dir("jars"))
     from(layout.projectDirectory.dir("launcher")) {
         into("launcher")
@@ -27,6 +27,12 @@ tasks.register<Jar>("jar") {
         include("build.rs")
         include("Cargo.lock")
         include("Cargo.toml")
+    }
+}
+
+configurations {
+    artifacts {
+        add("default", jar)
     }
 }
 
