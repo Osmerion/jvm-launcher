@@ -18,11 +18,11 @@ package com.osmerion.jvm.launcher.gradle.plugins
 import com.osmerion.jvm.launcher.gradle.JvmLauncherExtension
 import com.osmerion.jvm.launcher.gradle.internal.JvmLauncherExtensionImpl
 import com.osmerion.jvm.launcher.gradle.internal.JvmLauncherImpl
+import com.osmerion.jvm.launcher.gradle.internal.tasks.UnzipJvmLauncherSources
 import com.osmerion.jvm.launcher.gradle.tasks.BuildJvmLauncher
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.file.ArchiveOperations
-import org.gradle.api.tasks.Copy
+import org.gradle.api.tasks.Sync
 import javax.inject.Inject
 
 /**
@@ -32,9 +32,7 @@ import javax.inject.Inject
  *
  * @author  Leon Linhart
  */
-public open class JvmLauncherPlugin @Inject protected constructor(
-    private val archiveOperations: ArchiveOperations
-) : Plugin<Project> {
+public open class JvmLauncherPlugin @Inject protected constructor() : Plugin<Project> {
 
     override fun apply(target: Project) {
         val jvmLauncherExtension = target.extensions.create(
@@ -50,28 +48,37 @@ public open class JvmLauncherPlugin @Inject protected constructor(
 
         target.dependencies.add(sourcesConfiguration.name, "com.osmerion.jvmlauncher:jvm-launcher:0.1.0") // TODO Remove hardcoded version
 
-        val jvmLauncherSourceDirectory = target.layout.buildDirectory.dir("jvmLauncherSources").get()
+        val pluginOutputDirectory = target.layout.buildDirectory.dir("jvm-launcher")
+        val jvmLauncherSourceDirectory = pluginOutputDirectory.map {  it.dir("sources") }
 
-        val unpackJvmLauncherSources = target.tasks.register("unpackJvmLauncherSources", Copy::class.java) {
-            dependsOn(resolvableSourcesConfiguration.get())
-
-            into(jvmLauncherSourceDirectory)
-
-            val resolvedFiles = resolvableSourcesConfiguration.get().resolvedConfiguration.files
-            doFirst {
-                from(archiveOperations.zipTree(resolvedFiles.single()))
-            }
+        val unpackJvmLauncherSources = target.tasks.register("unpackJvmLauncherSources", UnzipJvmLauncherSources::class.java) {
+            inputFiles.from(resolvableSourcesConfiguration)
+            outputDirectory.set(jvmLauncherSourceDirectory)
         }
 
+        val jvmLaunchersDirectory = pluginOutputDirectory.map {  it.dir("launchers") }
         jvmLauncherExtension.launchers.all launcher@{
-            target.tasks.register("compileJvmLauncher", BuildJvmLauncher::class.java) {
-                dependsOn(unpackJvmLauncherSources)
+            val launcherDirectory = jvmLaunchersDirectory.map { it.dir(name) }
+            val launcherOutputDirectory = launcherDirectory.map { it.dir("bin") }
+            val launcherBuildDirectory = launcherDirectory.map { it.dir("sources") }
 
-                // TODO Lock this somehow or copy it to make it parallel-safe
-                this.sourceDirectory.convention(jvmLauncherSourceDirectory)
+            val launcherName = name.replaceFirstChar(Char::uppercaseChar)
+
+            val prepareLauncherSource = target.tasks.register("prepare${launcherName}Sources", Sync::class.java) {
+                from(unpackJvmLauncherSources)
+                into(launcherBuildDirectory)
+            }
+
+            target.tasks.register("build${launcherName}JvmLauncher", BuildJvmLauncher::class.java) {
+                dependsOn(prepareLauncherSource)
+
+                this.sourceDirectory.convention(launcherBuildDirectory)
+                this.destinationDirectory.convention(launcherOutputDirectory)
 
                 this.fileVersion.convention(this@launcher.fileVersion)
                 this.productVersion.convention(this@launcher.productVersion)
+
+                this.originalFilename.convention(this@launcher.name)
 
                 this.stringFileInfo.convention((this@launcher as JvmLauncherImpl).stringFileInfo)
 

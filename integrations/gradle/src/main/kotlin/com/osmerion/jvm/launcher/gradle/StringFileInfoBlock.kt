@@ -93,14 +93,6 @@ public interface StringFileInfoBlock {
     @get:Optional
     public val legalTrademarks: Property<String>
 
-    /**
-     * TODO doc
-     *
-     * @since   0.1.0
-     */
-    @get:Input
-    public val originalFilename: Property<String>
-
 //    public val privateBuild: Property<String>
 
     /**
