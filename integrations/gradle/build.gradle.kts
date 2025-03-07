@@ -159,7 +159,7 @@ tasks {
 buildConfig {
     packageName = "com.osmerion.jvm.launcher.gradle.internal"
 
-    buildConfigField("BUILD_VERSION", provider { "\"${project.version}\"" })
+    buildConfigField("BUILD_VERSION", provider { "${project.version}" })
 }
 
 val emptyJar = tasks.register<Jar>("emptyJar") {
