@@ -21,6 +21,7 @@ import com.osmerion.jvm.launcher.gradle.internal.JvmLauncherExtensionImpl
 import com.osmerion.jvm.launcher.gradle.internal.JvmLauncherImpl
 import com.osmerion.jvm.launcher.gradle.internal.tasks.UnzipJvmLauncherSources
 import com.osmerion.jvm.launcher.gradle.tasks.BuildJvmLauncher
+import com.osmerion.jvm.launcher.gradle.tasks.GenerateLauncherConfig
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.tasks.Sync
@@ -84,6 +85,15 @@ public open class JvmLauncherPlugin @Inject protected constructor() : Plugin<Pro
                 this.stringFileInfo.convention((this@launcher as JvmLauncherImpl).stringFileInfo)
 
                 this.icon.convention(this@launcher.icon)
+            }
+
+            target.tasks.register("generate${launcherName}LauncherConfig", GenerateLauncherConfig::class.java) {
+                this.outputFile.convention(launcherOutputDirectory.map { it.file("config.toml") })
+
+                this.libjvmPath.convention(this@launcher.libjvmPath)
+                this.jvmArgs.convention(this@launcher.jvmArgs)
+                this.classpath.convention(this@launcher.classpath)
+                this.mainClassName.convention(this@launcher.mainClassName)
             }
         }
     }

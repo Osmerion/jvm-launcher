@@ -19,6 +19,7 @@ package com.osmerion.jvm.launcher.gradle
 import org.gradle.api.Action
 import org.gradle.api.Named
 import org.gradle.api.file.RegularFileProperty
+import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Property
 
 /**
@@ -77,5 +78,35 @@ public interface JvmLauncher : Named {
      * @since   0.1.0
      */
     public val icon: RegularFileProperty
+
+    // config
+
+    /**
+     * The path to the JVM library.
+     *
+     * @since   0.1.0
+     */
+    public val libjvmPath: Property<String>
+
+    /**
+     * The JVM arguments to pass to the JVM.
+     *
+     * @since   0.1.0
+     */
+    public val jvmArgs: ListProperty<String>
+
+    /**
+     * The classpath to use when launching the JVM.
+     *
+     * @since   0.1.0
+     */
+    public val classpath: ListProperty<String>
+
+    /**
+     * The main class to launch.
+     *
+     * @since   0.1.0
+     */
+    public val mainClassName: Property<String>
 
 }
