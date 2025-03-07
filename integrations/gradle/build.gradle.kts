@@ -20,6 +20,7 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 
 plugins {
     alias(buildDeps.plugins.binary.compatibility.validator)
+    alias(buildDeps.plugins.gradle.buildconfig)
     alias(buildDeps.plugins.gradle.toolchain.switches)
     alias(buildDeps.plugins.java.gradle.plugin)
     alias(buildDeps.plugins.kotlin.jvm)
@@ -153,6 +154,12 @@ tasks {
     validatePlugins {
         enableStricterValidation = true
     }
+}
+
+buildConfig {
+    packageName = "com.osmerion.jvm.launcher.gradle.internal"
+
+    buildConfigField("BUILD_VERSION", provider { "\"${project.version}\"" })
 }
 
 val emptyJar = tasks.register<Jar>("emptyJar") {

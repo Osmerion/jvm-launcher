@@ -16,6 +16,7 @@
 package com.osmerion.jvm.launcher.gradle.plugins
 
 import com.osmerion.jvm.launcher.gradle.JvmLauncherExtension
+import com.osmerion.jvm.launcher.gradle.internal.BuildConfig
 import com.osmerion.jvm.launcher.gradle.internal.JvmLauncherExtensionImpl
 import com.osmerion.jvm.launcher.gradle.internal.JvmLauncherImpl
 import com.osmerion.jvm.launcher.gradle.internal.tasks.UnzipJvmLauncherSources
@@ -46,7 +47,7 @@ public open class JvmLauncherPlugin @Inject protected constructor() : Plugin<Pro
             extendsFrom(sourcesConfiguration.get())
         }
 
-        target.dependencies.add(sourcesConfiguration.name, "com.osmerion.jvmlauncher:jvm-launcher:0.1.0") // TODO Remove hardcoded version
+        target.dependencies.add(sourcesConfiguration.name, "com.osmerion.jvmlauncher:jvm-launcher:${BuildConfig.BUILD_VERSION}")
 
         val pluginOutputDirectory = target.layout.buildDirectory.dir("jvm-launcher")
         val jvmLauncherSourceDirectory = pluginOutputDirectory.map {  it.dir("sources") }
