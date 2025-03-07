@@ -43,7 +43,7 @@ public open class BuildJvmLauncher @Inject constructor(
 
     @get:Input
     public val executable: Property<String> = objectFactory.property(String::class.java)
-        .convention("cargo.exe")
+        .convention("cargo")
 
     @get:InputDirectory
     @get:PathSensitive(PathSensitivity.RELATIVE)
