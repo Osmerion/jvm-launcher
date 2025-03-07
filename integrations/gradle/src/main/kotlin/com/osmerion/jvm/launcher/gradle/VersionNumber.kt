@@ -15,6 +15,8 @@
  */
 package com.osmerion.jvm.launcher.gradle
 
+import java.io.Serializable
+
 /**
  * TODO doc
  *
@@ -27,7 +29,7 @@ public class VersionNumber(
     public val l1: Short,
     public val h2: Short,
     public val l2: Short
-) {
+) : Serializable {
 
     public operator fun component0(): Short = h1
     public operator fun component1(): Short = l1
