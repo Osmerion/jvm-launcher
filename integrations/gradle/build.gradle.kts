@@ -146,6 +146,10 @@ tasks {
         }
     }
 
+    named("functionalTest") {
+        dependsOn(project(":").tasks.named("publishAllPublicationsToFunctionalTestRepository"))
+    }
+
     check {
         @Suppress("UnstableApiUsage")
         dependsOn(testing.suites.named("functionalTest"))

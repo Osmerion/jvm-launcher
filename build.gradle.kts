@@ -37,6 +37,12 @@ configurations {
 }
 
 publishing {
+    repositories {
+        maven {
+            name = "FunctionalTest"
+            url = rootProject.layout.buildDirectory.dir("functional-test-repo").get().asFile.toURI()
+        }
+    }
     publications {
         register<MavenPublication>("mavenJava") {
             val emptyJar = tasks.register<Jar>("emptyJar") {
