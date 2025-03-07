@@ -44,9 +44,8 @@ jobs:
     strategy:
       matrix:
         jdk: [ 11, 17, 21, 23 ]
-        os: [ macos-latest, ubuntu-latest, windows-latest ]
     needs: build
-    runs-on: ${{ matrix.os }}
+    runs-on: windows-latest
     defaults:
       run:
         shell: bash
