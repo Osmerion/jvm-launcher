@@ -30,6 +30,11 @@ jvmLauncher {
                 productName = "My Product"
                 productVersion = "$version"
             }
+
+            mainClassName = "com/gw2tb/manager/MainKt"
+            libjvmPath = "./runtime/bin/server/jvm.dll"
+
+            classpath.add("./jars/example.jar")
         }
     }
 }

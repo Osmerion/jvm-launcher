@@ -80,7 +80,7 @@ class JvmLauncherPluginTest {
         )
 
         GradleRunner.create()
-            .withArguments("buildMyApplicationJvmLauncher", "--info", "-S", "--init-script", initScriptPath.absolutePathString())
+            .withArguments("compileMyApplicationJvmLauncher", "--info", "-S", "--init-script", initScriptPath.absolutePathString())
             .withGradleVersion(gradleVersion)
             .withPluginClasspath()
             .withProjectDir(projectDir.toFile())

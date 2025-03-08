@@ -71,7 +71,7 @@ public open class JvmLauncherPlugin @Inject protected constructor() : Plugin<Pro
                 into(launcherBuildDirectory)
             }
 
-            target.tasks.register("build${launcherName}JvmLauncher", BuildJvmLauncher::class.java) {
+            val compileJvmLauncher = target.tasks.register("compile${launcherName}JvmLauncher", BuildJvmLauncher::class.java) {
                 dependsOn(prepareLauncherSource)
 
                 this.sourceDirectory.convention(launcherBuildDirectory)
@@ -87,13 +87,17 @@ public open class JvmLauncherPlugin @Inject protected constructor() : Plugin<Pro
                 this.icon.convention(this@launcher.icon)
             }
 
-            target.tasks.register("generate${launcherName}LauncherConfig", GenerateLauncherConfig::class.java) {
+            val generateLauncherConfig = target.tasks.register("generate${launcherName}LauncherConfig", GenerateLauncherConfig::class.java) {
                 this.outputFile.convention(launcherOutputDirectory.map { it.file("config.toml") })
 
                 this.libjvmPath.convention(this@launcher.libjvmPath)
                 this.jvmArgs.convention(this@launcher.jvmArgs)
                 this.classpath.convention(this@launcher.classpath)
                 this.mainClassName.convention(this@launcher.mainClassName)
+            }
+
+            target.tasks.register("build${launcherName}JvmLauncher") {
+                dependsOn(compileJvmLauncher, generateLauncherConfig)
             }
         }
     }

@@ -21,6 +21,18 @@ This project implements a custom Java launcher using the JNI invocation API to
 launch a JVM. The launcher is small and can easily be compiled with custom
 resources to provide a seamless experience for end-users.
 
+The launcher executable looks up a configuration file (`config.toml`) in its
+parent directory to determine all necessary information to start the JVM. A
+configuration file looks as follows:
+
+```toml
+libjvm_path = "./path/to/jvm.dll"
+main_class = "com/example/Main"
+jvm_args = [
+    "-Djava.class.path=./path/to/application.jar;./path/to/library.jar"
+]
+```
+
 
 ## Usage
 
