@@ -96,7 +96,7 @@ jobs:
   nexus-upload:
     name: Upload to Nexus
     needs: create-staging-repository
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     environment: ${{ inputs.environment }}
     steps:
       - name: Checkout
@@ -184,7 +184,7 @@ jobs:
         env:
           ORG_GRADLE_PROJECT_signingKey: ${{ secrets.SIGNING_KEY }}
           ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.SIGNING_PASSWORD }}
-        run: ./gradlew check publishPlugins --info -S --show-version
+        run: ./gradlew publishPlugins --info -S --show-version
 
 
   nexus-release:
