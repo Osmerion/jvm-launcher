@@ -36,8 +36,8 @@ jvm_args = [
 
 ## Usage
 
-Currently, the JVM launcher is only available as a Gradle plugin. [Learn more
-about the Gradle plugin](/integrations/gradle/README.md)
+[Learn how to use the Gradle plugin](/integrations/gradle/README.md) to
+integrate building a custom launcher into an application's build process.
 
 
 ## Building from source
