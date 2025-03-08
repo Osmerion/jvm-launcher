@@ -49,19 +49,6 @@ class JvmLauncherPluginTest {
 
             add("8.8")
             add("8.7")
-            add("8.6")
-            add("8.5")
-
-            if (javaVersion >= JavaVersion.VERSION_21) return@buildList
-
-            add("8.4")
-            add("8.3")
-
-            if (javaVersion >= JavaVersion.VERSION_20) return@buildList
-
-            add("8.2.1")
-            add("8.1.1")
-            add("8.0.2")
         }
 
         @JvmStatic

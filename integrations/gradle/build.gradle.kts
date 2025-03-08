@@ -54,7 +54,7 @@ kotlin {
 
 gradlePlugin {
     compatibility {
-        minimumGradleVersion = "8.6"
+        minimumGradleVersion = "8.7"
     }
 
     website = "https://github.com/Osmerion/jvm-launcher"
