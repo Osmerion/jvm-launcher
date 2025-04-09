@@ -31,6 +31,7 @@ fn main() -> ExitCode {
 fn run() -> Result<()> {
     let current_exe = std::env::current_exe().map_err(Error::UnknownExecutable)?;
     let application_dir = current_exe.parent().ok_or(Error::UnknownApplicationDir)?;
+    std::env::set_current_dir(application_dir).map_err(Error::CouldNotSetCurrentDir)?;
 
     let config: Config = load_config(&application_dir.join("config.toml"))?;
     let init_args = build_init_args(&config)?;

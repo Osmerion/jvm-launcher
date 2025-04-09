@@ -15,6 +15,10 @@ pub enum Error {
     #[error("Could not load configuration file")]
     CouldNotLoadConfig(std::io::Error),
 
+    #[termination(exit_code(12))]
+    #[error("Unknown application directory")]
+    CouldNotSetCurrentDir(std::io::Error),
+
 
     #[termination(exit_code(20))]
     #[error("Could not parse configuration file")]
