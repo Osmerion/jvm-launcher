@@ -23,7 +23,6 @@ import org.gradle.api.tasks.CacheableTask
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
-import javax.inject.Inject
 
 /**
  * Generates the configuration file for a launcher executable.
