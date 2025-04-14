@@ -31,9 +31,8 @@ fn main() -> ExitCode {
 fn run() -> Result<()> {
     let current_exe = std::env::current_exe().map_err(Error::UnknownExecutable)?;
     let application_dir = current_exe.parent().ok_or(Error::UnknownApplicationDir)?;
-    std::env::set_current_dir(application_dir).map_err(Error::CouldNotSetCurrentDir)?;
 
-    let config: Config = load_config(&application_dir.join("config.toml"))?;
+    let config: Config = load_config(application_dir)?;
     let init_args = build_init_args(&config)?;
 
     let libjvm_path = application_dir.join(&config.libjvm_path);
@@ -63,15 +62,55 @@ fn run() -> Result<()> {
     }
 }
 
-fn load_config(path: &Path) -> Result<Config> {
+fn load_config(application_dir: &Path) -> Result<Config> {
+    let path = application_dir.join("config.toml");
     let file_content = fs::read_to_string(path).map_err(Error::CouldNotLoadConfig)?;
     let config: Config = toml::from_str(&file_content).map_err(Error::CouldNotReadConfig)?;
+
     // TODO validation?
+
+    let config: Config = Config {
+        jvm_args: config.jvm_args
+            .iter()
+            .map(|arg| resolve_path_placeholders(arg, application_dir))
+            .collect(),
+        ..config
+    };
+
+    dbg!(&config);
 
     Ok(config)
 }
 
+fn resolve_path_placeholders(input: &str, application_dir: &Path) -> String {
+    // Regex: match unescaped <path:...> (avoid matching \<path:...>)
+    let re = regex::Regex::new(r"(\\*)<path:([^>]+)>").unwrap();
+
+    // Replace each match with resolved absolute path
+    let result = re.replace_all(input, |caps: &regex::Captures| {
+        let backslashes = &caps[1];
+        let relative = &caps[2];
+
+        let num_backslashes = backslashes.len();
+
+        if num_backslashes % 2 == 0 {
+            // Not escaped: replace the whole thing with resolved path, keep half the backslashes
+            let resolved = application_dir.join(relative).to_string_lossy().to_string();
+            let kept_backslashes = "\\".repeat(num_backslashes / 2);
+            format!("{}{}", kept_backslashes, resolved)
+        } else {
+            // Escaped: remove one backslash, leave the placeholder as-is
+            let kept_backslashes = "\\".repeat((num_backslashes - 1) / 2);
+            format!("{}<path:{}>", kept_backslashes, relative)
+        }
+    });
+
+    // Remove the escape character '\' from any \<path:...> so it stays literal.
+    result.replace(r"\<path:", "<path:")
+}
+
 #[derive(Deserialize)]
+#[derive(Debug)]
 struct Config {
     jvm_args: Vec<String>,
     libjvm_path: String,

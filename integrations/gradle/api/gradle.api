@@ -7,8 +7,13 @@ public abstract interface class com/osmerion/jvm/launcher/gradle/JvmLauncher : o
 	public abstract fun getLibjvmPath ()Lorg/gradle/api/provider/Property;
 	public abstract fun getMainClassName ()Lorg/gradle/api/provider/Property;
 	public abstract fun getProductVersion ()Lorg/gradle/api/provider/Property;
+	public abstract fun path (Ljava/lang/String;)Ljava/lang/String;
 	public abstract fun productVersion (SSSS)V
 	public abstract fun stringFileInfo (Lorg/gradle/api/Action;)V
+}
+
+public final class com/osmerion/jvm/launcher/gradle/JvmLauncher$DefaultImpls {
+	public static fun path (Lcom/osmerion/jvm/launcher/gradle/JvmLauncher;Ljava/lang/String;)Ljava/lang/String;
 }
 
 public abstract interface class com/osmerion/jvm/launcher/gradle/JvmLauncherExtension {

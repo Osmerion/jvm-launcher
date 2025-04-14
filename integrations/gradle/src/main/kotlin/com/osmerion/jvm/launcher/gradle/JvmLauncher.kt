@@ -91,12 +91,18 @@ public interface JvmLauncher : Named {
     /**
      * The JVM arguments to pass to the JVM.
      *
+     * Occurrences of the string `<path:{path}>` are treated as paths relative to the launcher executable and resolved
+     * accordingly at runtime. This can be escaped using a backslash (i.e. `\<path:{path}>`). The [path] function may be
+     * used to wrap paths.
+     *
      * @since   0.1.0
      */
     public val jvmArgs: ListProperty<String>
 
     /**
      * The classpath to use when launching the JVM.
+     *
+     * All arguments are assumed to be paths relative to the launcher executable and already wrapped using [path].
      *
      * @since   0.1.0
      */
@@ -108,5 +114,15 @@ public interface JvmLauncher : Named {
      * @since   0.1.0
      */
     public val mainClassName: Property<String>
+
+    /**
+     * Wraps the given path in a special format that is recognized by the launcher. The `path` is resolved at runtime
+     * relative to the launcher executable.
+     *
+     * @param path  the relative path
+     *
+     * @since   0.2.0
+     */
+    public fun path(path: String): String = "<path:$path>"
 
 }

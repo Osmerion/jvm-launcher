@@ -13,6 +13,7 @@ embed-resource = "3.0.1"
 
 [dependencies]
 jni = { version = "0.21.1", features = ["invocation"] }
+regex = "1.11.1"
 serde = { version = "1.0.216", features = ["derive"] }
 thiserror = "2.0.6"
 thistermination = "1.1.0"

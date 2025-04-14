@@ -29,7 +29,7 @@ configuration file looks as follows:
 libjvm_path = "./path/to/jvm.dll"
 main_class = "com/example/Main"
 jvm_args = [
-    "-Djava.class.path=./path/to/application.jar;./path/to/library.jar"
+    "-Djava.class.path=<path:./path/to/application.jar>;<path:./path/to/library.jar>"
 ]
 ```
 

@@ -82,7 +82,7 @@ public abstract class GenerateLauncherConfig : DefaultTask() {
             addAll(jvmArgs.get())
 
             if (classpath.isNotEmpty()) {
-                add("-Djava.class.path=${classpath.joinToString(separator = ";")}")
+                add("-Djava.class.path=${classpath.joinToString(separator = ";") { "<path:$it>" }}")
             }
         }
 
