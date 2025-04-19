@@ -18,7 +18,7 @@ package com.osmerion.jvm.launcher.gradle
 import java.io.Serializable
 
 /**
- * TODO doc
+ * A version number consisting of four 16-bit integers.
  *
  * @since   0.1.0
  *
@@ -37,7 +37,7 @@ public class VersionNumber(
     public operator fun component3(): Short = l2
 
     /**
-     * TODO doc
+     * Returns a string representation of this version number, using the specified separator between the components.
      *
      * @since   0.1.0
      */

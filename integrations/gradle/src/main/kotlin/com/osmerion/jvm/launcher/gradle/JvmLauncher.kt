@@ -34,28 +34,36 @@ public interface JvmLauncher : Named {
     // fixed-info
 
     /**
-     * TODO doc
+     * The binary version number of the launcher executable file.
+     *
+     * This corresponds to the `FILEVERSION` field of the version info resource.
+     *
+     * [Read more in the MSDN documentation](https://learn.microsoft.com/en-us/windows/win32/menurc/versioninfo-resource)
      *
      * @since   0.1.0
      */
     public val fileVersion: Property<VersionNumber>
 
     /**
-     * TODO doc
+     * Shorthand for setting the [fileVersion].
      *
      * @since   0.1.0
      */
     public fun fileVersion(h1: Short, l1: Short, h2: Short, l2: Short)
 
     /**
-     * TODO doc
+     * The binary version number of the product with which the file is distributed.
+     *
+     * This corresponds to the `PRODUCTVERSION` field of the version info resource.
+     *
+     * [Read more in the MSDN documentation](https://learn.microsoft.com/en-us/windows/win32/menurc/versioninfo-resource)
      *
      * @since   0.1.0
      */
     public val productVersion: Property<VersionNumber>
 
     /**
-     * TODO doc
+     * Shorthand for setting the [productVersion].
      *
      * @since   0.1.0
      */
@@ -64,7 +72,7 @@ public interface JvmLauncher : Named {
     // props
 
     /**
-     * TODO doc
+     * Configures the string file information of the launcher executable.
      *
      * @since   0.1.0
      */

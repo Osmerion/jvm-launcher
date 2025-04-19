@@ -28,7 +28,8 @@ import org.gradle.api.tasks.Sync
 import javax.inject.Inject
 
 /**
- * TODO doc
+ * The `JvmLauncherPlugin` registers the [JvmLauncherExtension] and automatically registers tasks for building JVM
+ * launchers.
  *
  * @since   0.1.0
  *
