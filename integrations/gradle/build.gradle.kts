@@ -166,11 +166,6 @@ buildConfig {
     buildConfigField("BUILD_VERSION", provider { "${project.version}" })
 }
 
-val emptyJar = tasks.register<Jar>("emptyJar") {
-    destinationDirectory = layout.buildDirectory.dir("emptyJar")
-    archiveBaseName = "com.osmerion.jvm-launcher.gradle.plugin"
-}
-
 publishing {
     publications {
         withType<MavenPublication>().configureEach {
