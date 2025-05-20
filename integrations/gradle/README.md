@@ -1,7 +1,7 @@
 # JVM Launcher Gradle Plugin
 
 [![Maven Central](https://img.shields.io/maven-central/v/com.osmerion.jvmlauncher/jvm-launcher-gradle-plugin.svg?style=for-the-badge&label=Maven%20Central)](https://maven-badges.herokuapp.com/maven-central/com.osmerion.jvmlauncher/jvm-launcher-gradle-plugin)
-[![Gradle Plugin Portal](https://img.shields.io/maven-metadata/v.svg?style=for-the-badge&&label=Gradle%20Plugin%20Portal&logo=Gradle&metadataUrl=https%3A%2F%2Fplugins.gradle.org%2Fm2%2Fcom%2Fosmerion%2jvmlauncher%2Fcom.osmerion.jvm-launcher.gradle.plugin%2Fmaven-metadata.xml)](https://plugins.gradle.org/plugin/com.osmerion.jvm-launcher)
+[![Gradle Plugin Portal](https://img.shields.io/maven-metadata/v.svg?style=for-the-badge&label=Gradle%20Plugin%20Portal&logo=Gradle&metadataUrl=https%3A%2F%2Fplugins.gradle.org%2Fm2%2Fcom%2Fosmerion%2Fjvm-launcher%2Fcom.osmerion.jvm-launcher.gradle.plugin%2Fmaven-metadata.xml)](https://plugins.gradle.org/plugin/com.osmerion.jvm-launcher)
 ![Gradle](https://img.shields.io/badge/Gradle-8.7-green.svg?style=for-the-badge&color=1ba8cb&logo=Gradle)
 ![Java](https://img.shields.io/badge/Java-11-green.svg?style=for-the-badge&color=b07219&logo=Java)
 
