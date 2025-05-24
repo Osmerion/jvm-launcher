@@ -43,7 +43,7 @@ jobs:
     name: Check
     strategy:
       matrix:
-        jdk: [ 11, 17, 21, 23 ]
+        jdk: [ 17, 21, 23, 24 ]
     needs: build
     runs-on: windows-latest
     defaults:

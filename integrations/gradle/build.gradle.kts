@@ -46,9 +46,9 @@ kotlin {
         apiVersion = KotlinVersion.KOTLIN_1_8
         languageVersion = KotlinVersion.KOTLIN_1_8
 
-        jvmTarget = JvmTarget.JVM_11
+        jvmTarget = JvmTarget.JVM_17
 
-        freeCompilerArgs.add("-Xjdk-release=11")
+        freeCompilerArgs.add("-Xjdk-release=17")
     }
 }
 
@@ -115,13 +115,13 @@ testing {
 
 tasks {
     withType<JavaCompile>().configureEach {
-        options.release = 11
+        options.release = 17
     }
 
     withType<Test>().configureEach {
         @OptIn(ExperimentalToolchainSwitchesApi::class)
         javaLauncher.set(inferLauncher(default = project.javaToolchains.launcherFor {
-            languageVersion = JavaLanguageVersion.of(11)
+            languageVersion = JavaLanguageVersion.of(17)
         }))
 
         /*
