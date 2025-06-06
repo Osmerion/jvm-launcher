@@ -77,8 +77,6 @@ fn load_config(application_dir: &Path) -> Result<Config> {
         ..config
     };
 
-    dbg!(&config);
-
     Ok(config)
 }
 
