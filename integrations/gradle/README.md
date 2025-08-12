@@ -20,7 +20,7 @@ process of JVM-based desktop applications.
 
 ```kotlin
 plugins {
-    id("com.osmerion.jvm-launcher") version "0.1.0"
+    id("com.osmerion.jvm-launcher") version "0.3.0"
 }
 ```
 
