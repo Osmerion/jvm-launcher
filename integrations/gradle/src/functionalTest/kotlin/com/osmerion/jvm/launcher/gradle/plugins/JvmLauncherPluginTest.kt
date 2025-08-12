@@ -16,7 +16,6 @@
  */
 package com.osmerion.jvm.launcher.gradle.plugins
 
-import org.gradle.api.JavaVersion
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.io.TempDir
@@ -34,21 +33,9 @@ class JvmLauncherPluginTest {
         @JvmStatic
         private fun provideGradleVersions(): List<String> = buildList {
             // See https://docs.gradle.org/current/userguide/compatibility.html
-            val javaVersion = JavaVersion.current()
+            // val javaVersion = JavaVersion.current()
 
-            add("8.13")
-            add("8.12.1")
-            add("8.11.1")
-            add("8.10.2")
-
-            if (javaVersion >= JavaVersion.VERSION_23) return@buildList
-
-            add("8.9")
-
-            if (javaVersion >= JavaVersion.VERSION_22) return@buildList
-
-            add("8.8")
-            add("8.7")
+            add("9.0.0")
         }
 
         @JvmStatic
