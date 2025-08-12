@@ -28,6 +28,19 @@ plugins {
 rootProject.name = "jvm-launcher"
 
 dependencyResolutionManagement {
+    repositoriesMode = RepositoriesMode.FAIL_ON_PROJECT_REPOS
+
+    repositories {
+        mavenCentral()
+
+        // https://github.com/gradle/gradle/issues/29483
+        maven(url = "https://repo.gradle.org/gradle/libs-releases/") {
+            mavenContent {
+                includeGroup("org.gradle.experimental")
+            }
+        }
+    }
+
     versionCatalogs {
         register("buildDeps") {
             from(files("./gradle/build.versions.toml"))

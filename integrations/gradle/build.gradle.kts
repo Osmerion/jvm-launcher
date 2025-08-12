@@ -22,7 +22,6 @@ plugins {
     alias(buildDeps.plugins.binary.compatibility.validator)
     alias(buildDeps.plugins.gradle.buildconfig)
     alias(buildDeps.plugins.gradle.toolchain.switches)
-    alias(buildDeps.plugins.java.gradle.plugin)
     alias(buildDeps.plugins.kotlin.jvm)
     alias(buildDeps.plugins.kotlin.plugin.samwithreceiver)
     alias(buildDeps.plugins.plugin.publish)
@@ -43,8 +42,8 @@ kotlin {
     explicitApi()
 
     compilerOptions {
-        apiVersion = KotlinVersion.KOTLIN_1_8
-        languageVersion = KotlinVersion.KOTLIN_1_8
+        apiVersion = KotlinVersion.KOTLIN_2_2
+        languageVersion = KotlinVersion.KOTLIN_2_2
 
         jvmTarget = JvmTarget.JVM_17
 
@@ -53,10 +52,6 @@ kotlin {
 }
 
 gradlePlugin {
-    compatibility {
-        minimumGradleVersion = "8.7"
-    }
-
     website = "https://github.com/Osmerion/jvm-launcher"
     vcsUrl = "https://github.com/Osmerion/jvm-launcher.git"
 
@@ -183,4 +178,10 @@ publishing {
 
 dependencies {
     compileOnlyApi(kotlin("stdlib"))
+    compileOnlyApi(libs.gradle.api) {
+        capabilities {
+            // https://github.com/gradle/gradle/issues/29483
+            requireCapability("org.gradle.experimental:gradle-public-api-internal")
+        }
+    }
 }
