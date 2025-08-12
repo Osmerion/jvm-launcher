@@ -25,6 +25,7 @@ import com.osmerion.jvm.launcher.gradle.tasks.GenerateLauncherConfig
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.tasks.Sync
+import org.gradle.util.GradleVersion
 import javax.inject.Inject
 
 /**
@@ -38,6 +39,10 @@ import javax.inject.Inject
 public open class JvmLauncherPlugin @Inject protected constructor() : Plugin<Project> {
 
     override fun apply(target: Project) {
+        if (GradleVersion.current() < GradleVersion.version("9.0.0")) {
+            throw IllegalStateException("This plugin requires Gradle 9.0.0 or later")
+        }
+
         val jvmLauncherExtension = target.extensions.create(
             JvmLauncherExtension::class.java,
             "jvmLauncher",
