@@ -64,3 +64,11 @@ jvmLauncher {
 Then, the `buildMyApplicationJvmLauncher` task can be used to build the
 launcher. By default, the executable can be found in the `build/jvm-launchers/launchers/MyApplication/bin/`
 directory.
+
+
+## Compatibility
+
+| JDK Tools Gradle Plugin | Supported Gradle versions |
+|-------------------------|---------------------------|
+| 0.3.0                   | 9.0+                      |
+| 0.1.0                   | 8.7+                      |
