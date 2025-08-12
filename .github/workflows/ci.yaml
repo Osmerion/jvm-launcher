@@ -30,9 +30,8 @@ jobs:
     strategy:
       matrix:
         jdk: [ 17, 21, 24 ]
-        os: [ ubuntu-latest, windows-latest ]
     needs: build
-    runs-on: ${{ matrix.os }}
+    runs-on: windows-latest
     steps:
       - name: Checkout
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
