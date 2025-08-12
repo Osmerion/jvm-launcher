@@ -118,21 +118,12 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@017a9effdb900e5b5b2fddfb590a105619dca3c3 # v4
 
-      # https://github.com/gradle/gradle/issues/1246
-      - name: Install Gradle Plugin Portal credentials
+      - name: Gradle Publish
         env:
           GRADLE_PUBLISH_KEY: ${{ secrets.GRADLE_PUBLISH_KEY }}
           GRADLE_PUBLISH_SECRET: ${{ secrets.GRADLE_PUBLISH_SECRET }}
-        shell: bash
-        run: |
-          mkdir -p ~/.gradle
-          echo -e "gradle.publish.key=$GRADLE_PUBLISH_KEY\ngradle.publish.secret=$GRADLE_PUBLISH_SECRET" > ~/.gradle/gradle.properties
-
-      - name: Gradle Publish
-        env:
           ORG_GRADLE_PROJECT_signingKey: ${{ secrets.SIGNING_KEY }}
           ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.SIGNING_PASSWORD }}
-        shell: bash
         run: ./gradlew check publishPlugins --info -S --show-version
 
   central-release:
