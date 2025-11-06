@@ -177,7 +177,7 @@ public open class BuildJvmLauncher @Inject constructor(
 
         val iconResource = icon.orNull?.let { iconFile ->
             val iconResource = sourceDirectory.file("icon.rc")
-            iconResource.asFile.writeText("""appicon ICON "${iconFile.asFile.absolutePath}"""")
+            iconResource.asFile.writeText("""appicon ICON "${iconFile.asFile.toRelativeString(sourceDirectory.asFile)}"""")
 
             iconResource
         }
