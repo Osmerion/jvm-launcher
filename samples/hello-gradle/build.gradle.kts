@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 plugins {
-    id("com.osmerion.jvm-launcher") version "0.3.1"
+    id("com.osmerion.jvm-launcher") version "0.4.0"
 }
 
 jvmLauncher {
