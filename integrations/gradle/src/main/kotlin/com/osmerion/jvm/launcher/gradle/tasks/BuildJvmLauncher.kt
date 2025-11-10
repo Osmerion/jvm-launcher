@@ -18,12 +18,14 @@ package com.osmerion.jvm.launcher.gradle.tasks
 import com.osmerion.jvm.launcher.gradle.StringFileInfoBlock
 import com.osmerion.jvm.launcher.gradle.VersionNumber
 import org.gradle.api.DefaultTask
+import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.model.ObjectFactory
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.*
 import org.gradle.process.ExecOperations
+import java.io.File
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
 import javax.inject.Inject
@@ -119,6 +121,15 @@ public open class BuildJvmLauncher @Inject constructor(
     @get:Optional
     public val icon: RegularFileProperty = objectFactory.fileProperty()
 
+    /**
+     * Additional resource files to include the executable.
+     *
+     * @since   0.4.0
+     */
+    @get:InputFiles
+    @get:PathSensitive(PathSensitivity.RELATIVE)
+    public val resources: ConfigurableFileCollection = objectFactory.fileCollection()
+
     init {
         outputs.file(destinationDirectory.flatMap { destinationDir -> destinationDir.dir(originalFilename.map { "$it.exe" }) })
         outputs.file(destinationDirectory.flatMap { destinationDir -> destinationDir.dir(originalFilename.map { "$it.pdb" }) })
@@ -186,9 +197,14 @@ public open class BuildJvmLauncher @Inject constructor(
             this.executable = this@BuildJvmLauncher.executable.get()
             this.workingDir = sourceDirectory.asFile
 
+            val resourcePaths = buildList {
+                add(resources.asFile)
+                iconResource?.asFile?.let(this::add)
+                addAll(this@BuildJvmLauncher.resources.files)
+            }.joinToString(separator = ";", transform = File::getAbsolutePath)
+
             environment(buildMap {
-                put("OSMERION_jvmLauncher_versioninfo", resources.asFile.absolutePath)
-                if (iconResource != null) put("OSMERION_jvmLauncher_icon", iconResource.asFile.absolutePath)
+                put("OSMERION_jvmLauncher_resources", resourcePaths)
             })
 
             args("build", "--release")

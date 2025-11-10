@@ -7,6 +7,7 @@ public abstract interface class com/osmerion/jvm/launcher/gradle/JvmLauncher : o
 	public abstract fun getLibjvmPath ()Lorg/gradle/api/provider/Property;
 	public abstract fun getMainClassName ()Lorg/gradle/api/provider/Property;
 	public abstract fun getProductVersion ()Lorg/gradle/api/provider/Property;
+	public abstract fun getResources ()Lorg/gradle/api/file/ConfigurableFileCollection;
 	public fun path (Ljava/lang/String;)Ljava/lang/String;
 	public abstract fun productVersion (SSSS)V
 	public abstract fun stringFileInfo (Lorg/gradle/api/Action;)V
@@ -60,6 +61,7 @@ public class com/osmerion/jvm/launcher/gradle/tasks/BuildJvmLauncher : org/gradl
 	public final fun getIcon ()Lorg/gradle/api/file/RegularFileProperty;
 	public final fun getOriginalFilename ()Lorg/gradle/api/provider/Property;
 	public final fun getProductVersion ()Lorg/gradle/api/provider/Property;
+	public final fun getResources ()Lorg/gradle/api/file/ConfigurableFileCollection;
 	public final fun getSourceDirectory ()Lorg/gradle/api/file/DirectoryProperty;
 	public final fun getStringFileInfo ()Lorg/gradle/api/provider/Property;
 }

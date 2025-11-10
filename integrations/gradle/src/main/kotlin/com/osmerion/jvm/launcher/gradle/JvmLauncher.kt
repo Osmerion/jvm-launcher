@@ -18,6 +18,7 @@ package com.osmerion.jvm.launcher.gradle
 
 import org.gradle.api.Action
 import org.gradle.api.Named
+import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Property
@@ -86,6 +87,13 @@ public interface JvmLauncher : Named {
      * @since   0.1.0
      */
     public val icon: RegularFileProperty
+
+    /**
+     * Additional resource files to include the executable.
+     *
+     * @since   0.4.0
+     */
+    public val resources: ConfigurableFileCollection
 
     // config
 

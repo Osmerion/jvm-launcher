@@ -91,6 +91,7 @@ public open class JvmLauncherPlugin @Inject protected constructor() : Plugin<Pro
                 this.stringFileInfo.convention((this@launcher as JvmLauncherImpl).stringFileInfo)
 
                 this.icon.convention(this@launcher.icon)
+                this.resources.convention(this@launcher.resources)
             }
 
             val generateLauncherConfig = target.tasks.register("generate${launcherName}LauncherConfig", GenerateLauncherConfig::class.java) {
