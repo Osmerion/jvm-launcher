@@ -5,7 +5,9 @@ fn main() {
         for path in extra_resources_paths.split(';') {
             let path = path.trim();
             if !path.is_empty() {
-                embed_resource::compile(path, embed_resource::NONE).manifest_optional().unwrap();
+                embed_resource::compile(path, embed_resource::NONE)
+                    .manifest_optional()
+                    .unwrap();
             }
         }
     }

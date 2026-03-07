@@ -3,14 +3,15 @@
 
 mod error;
 
+use crate::error::Error;
+use jni::objects::JValue;
+use jni::strings::JNIString;
+use jni::{jni_sig, jni_str, InitArgs, InitArgsBuilder, JNIVersion, JavaVM};
+use serde::Deserialize;
 use std::fs;
 use std::path::Path;
 use std::process::{ExitCode, Termination};
-use jni::{InitArgs, InitArgsBuilder, JavaVM, JNIVersion};
-use jni::objects::JValue;
-use serde::Deserialize;
-use winapi::um::wincon::{ATTACH_PARENT_PROCESS, AttachConsole};
-use crate::error::Error;
+use winapi::um::wincon::{AttachConsole, ATTACH_PARENT_PROCESS};
 
 type Result<T> = std::result::Result<T, Error>;
 
@@ -36,30 +37,54 @@ fn run() -> Result<()> {
     let init_args = build_init_args(&config)?;
 
     let libjvm_path = application_dir.join(&config.libjvm_path);
-    let jvm = JavaVM::with_libjvm(init_args, || Ok(libjvm_path.as_os_str()))
-        .map_err(|err| {
-            eprintln!("Error starting JVM: {}", err);
-            Error::JvmStartError(err)
-        })?;
+    let jvm = JavaVM::with_libjvm(init_args, || Ok(libjvm_path.as_os_str())).map_err(|err| {
+        eprintln!("Error starting JVM: {}", err);
+        Error::JvmStartError(err)
+    })?;
 
-    let mut env = jvm.attach_current_thread().map_err(Error::CouldNotAttachToJvm)?;
+    let mut inner_error: Option<Error> = None;
 
-    let main_class = env.find_class(config.main_class).map_err(Error::CouldNotFindMainClass)?;
+    jvm.attach_current_thread(|env| {
+        macro_rules! try_jni {
+            ($expr:expr, $variant:expr) => {
+                match $expr {
+                    Ok(v) => v,
+                    Err(e) => {
+                        inner_error = Some($variant(e));
+                        return Ok(());
+                    }
+                }
+            };
+        }
 
-    let program_args: Vec<String> = std::env::args().collect();
-    let argv_strings: Vec<_> = program_args.iter().map(|it| env.new_string(it).unwrap()).collect();
-    let argv: Vec<JValue> = argv_strings.iter().map(|it| JValue::from(it)).collect();
+        let main_class = try_jni!(
+            env.find_class(JNIString::from(&config.main_class)),
+            Error::CouldNotFindMainClass
+        );
 
-    env.call_static_method(main_class, "main", "([Ljava/lang/String;)V", &argv).unwrap();
+        let program_args: Vec<String> = std::env::args().collect();
+        let argv_strings: Vec<_> = program_args
+            .iter()
+            .map(|it| env.new_string(it).unwrap())
+            .collect();
+        let argv: Vec<JValue> = argv_strings.iter().map(|it| JValue::from(it)).collect();
 
-    match env.exception_check() {
-        Ok(exception) if exception => {
-            let _ = env.exception_describe();
-            Err(Error::ProgramError)
-        },
-        Ok(_) => Ok(()),
-        Err(err) => Err(Error::UnexpectedJniError(err))
-    }
+        try_jni!(
+            env.call_static_method(
+                main_class,
+                jni_str!("main"),
+                jni_sig!((args: [java.lang.String]) -> void),
+                &argv
+            ),
+            Error::UnexpectedJniError
+        );
+
+        env.exception_catch().map_err(|err| {
+            inner_error = Some(Error::ProgramError);
+            err
+        })
+    })
+    .map_err(|e| inner_error.unwrap_or(Error::CouldNotAttachToJvm(e)))
 }
 
 fn load_config(application_dir: &Path) -> Result<Config> {
@@ -70,7 +95,8 @@ fn load_config(application_dir: &Path) -> Result<Config> {
     // TODO validation?
 
     let config: Config = Config {
-        jvm_args: config.jvm_args
+        jvm_args: config
+            .jvm_args
             .iter()
             .map(|arg| resolve_path_placeholders(arg, application_dir))
             .collect(),
@@ -107,12 +133,11 @@ fn resolve_path_placeholders(input: &str, application_dir: &Path) -> String {
     result.replace(r"\<path:", "<path:")
 }
 
-#[derive(Deserialize)]
-#[derive(Debug)]
+#[derive(Deserialize, Debug)]
 struct Config {
     jvm_args: Vec<String>,
     libjvm_path: String,
-    main_class: String
+    main_class: String,
 }
 
 fn build_init_args(config: &Config) -> Result<InitArgs> {
@@ -124,5 +149,7 @@ fn build_init_args(config: &Config) -> Result<InitArgs> {
         init_args_builder = init_args_builder.option(jvm_arg);
     }
 
-    init_args_builder.build().map_err(Error::CouldNotBuildInitArgs)
+    init_args_builder
+        .build()
+        .map_err(Error::CouldNotBuildInitArgs)
 }

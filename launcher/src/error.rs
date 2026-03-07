@@ -15,11 +15,9 @@ pub enum Error {
     #[error("Could not load configuration file")]
     CouldNotLoadConfig(std::io::Error),
 
-
     #[termination(exit_code(20))]
     #[error("Could not parse configuration file")]
     CouldNotReadConfig(toml::de::Error),
-
 
     #[termination(exit_code(30))]
     #[error("Could not start JVM")]
@@ -43,5 +41,5 @@ pub enum Error {
 
     #[termination(exit_code(50))]
     #[error("Uncaught exception from Java code")]
-    ProgramError
+    ProgramError,
 }
