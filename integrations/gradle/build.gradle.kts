@@ -15,6 +15,7 @@
  */
 import io.github.themrmilchmann.gradle.toolchainswitches.ExperimentalToolchainSwitchesApi
 import io.github.themrmilchmann.gradle.toolchainswitches.inferLauncher
+import org.gradle.plugin.compatibility.compatibility
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 
@@ -63,6 +64,13 @@ gradlePlugin {
             tags.addAll("desktop", "jvm-launcher")
 
             implementationClass = "com.osmerion.jvm.launcher.gradle.plugins.JvmLauncherPlugin"
+
+            @Suppress("UnstableApiUsage")
+            compatibility {
+                features {
+                    configurationCache = true
+                }
+            }
         }
     }
 }
